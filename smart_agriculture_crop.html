@@ -1,0 +1,553 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--color-background-tertiary);min-height:100vh}
+.hidden{display:none!important}
+
+/* SHARED */
+.green-50{background:#EAF3DE}.green-100{background:#C0DD97}.green-800c{color:#27500A}.green-600c{color:#3B6D11}.green-400c{color:#639922}
+.amber-50{background:#FAEEDA}.amber-800c{color:#633806}.amber-400c{color:#BA7517}
+.teal-50{background:#E1F5EE}.teal-800c{color:#085041}.teal-600c{color:#0F6E56}
+.blue-50{background:#E6F1FB}.blue-800c{color:#0C447C}
+.red-50{background:#FCEBEB}.red-600c{color:#A32D2D}
+.coral-50{background:#FAECE7}.coral-800c{color:#712B13}
+.purple-50{background:#EEEDFE}.purple-800c{color:#3C3489}
+
+/* LANDING */
+#landing{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.land-inner{width:100%;max-width:860px}
+.land-header{text-align:center;margin-bottom:2rem}
+.land-logo{width:52px;height:52px;border-radius:var(--border-radius-lg);background:#EAF3DE;display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:1rem}
+.land-title{font-family:'DM Serif Display',serif;font-size:30px;color:var(--color-text-primary)}
+.land-sub{font-size:14px;color:var(--color-text-secondary);margin-top:6px}
+.farmer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:1.5rem}
+.farmer-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;cursor:pointer;transition:border-color 0.15s}
+.farmer-card:hover{border-color:var(--color-border-primary)}
+.fc-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;margin-bottom:10px}
+.fc-name{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.fc-village{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.fc-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.fc-tag{font-size:11px;padding:2px 8px;border-radius:100px}
+.fc-btn{width:100%;margin-top:12px;padding:9px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;background:transparent;color:var(--color-text-secondary);transition:all 0.15s}
+.fc-btn:hover{background:#EAF3DE;border-color:#C0DD97;color:#27500A}
+.land-divider{text-align:center;font-size:13px;color:var(--color-text-secondary);margin:1rem 0}
+.btn-manual{width:100%;max-width:300px;display:block;margin:0 auto;padding:10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all 0.15s}
+.btn-manual:hover{background:var(--color-background-secondary)}
+
+/* LOGIN MODAL OVERLAY */
+#login-overlay{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--color-background-tertiary)}
+.login-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:2rem;width:100%;max-width:400px}
+.login-avatar-wrap{text-align:center;margin-bottom:1.25rem}
+.login-av{width:60px;height:60px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:20px;font-weight:500;margin-bottom:8px}
+.login-name{font-family:'DM Serif Display',serif;font-size:20px;color:var(--color-text-primary)}
+.login-role{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.form-lbl{display:block;font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:5px;letter-spacing:0.3px;text-transform:uppercase}
+.form-inp{width:100%;padding:10px 12px;font-size:14px;font-family:'DM Sans',sans-serif;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary)}
+.form-inp:focus{outline:none;border-color:#639922}
+.btn-sign{width:100%;padding:11px;background:#3B6D11;color:#fff;border:none;border-radius:var(--border-radius-md);font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:0.75rem;transition:background 0.15s}
+.btn-sign:hover{background:#27500A}
+.err-msg{color:#A32D2D;font-size:12px;margin-top:6px;display:none}
+.hint-box{margin-top:12px;padding:10px 12px;background:#EAF3DE;border-radius:var(--border-radius-md);font-size:12px;color:#27500A}
+.hint-box strong{font-weight:500}
+.back-btn{width:100%;margin-top:10px;padding:9px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;background:transparent;color:var(--color-text-secondary)}
+.back-btn:hover{background:var(--color-background-secondary)}
+
+/* TOPBAR */
+.topbar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:54px}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-brand{font-family:'DM Serif Display',serif;font-size:17px;color:var(--color-text-primary)}
+.tb-badge{font-size:11px;padding:2px 8px;border-radius:100px}
+.nav-row{display:flex;gap:2px}
+.nav-btn{padding:5px 12px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--color-text-secondary);font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.nav-btn:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.nav-btn.act{background:#EAF3DE;color:#27500A}
+.tb-right{display:flex;align-items:center;gap:10px}
+.user-chip{display:flex;align-items:center;gap:7px;padding:4px 10px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.u-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.btn-out{padding:5px 12px;background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;color:var(--color-text-secondary);font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.btn-out:hover{background:#FCEBEB;border-color:#E24B4A;color:#A32D2D}
+
+/* MAIN */
+.main{padding:1.25rem;max-width:1080px;margin:0 auto}
+.pv{display:none}.pv.act{display:block}
+.pg-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--color-text-primary);margin-bottom:3px}
+.pg-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.25rem}
+.mcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.ct{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:.9rem}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1rem}
+.mmet{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.9rem}
+.mmet-lbl{font-size:11px;color:var(--color-text-secondary);font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.3px}
+.mmet-val{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.mmet-tag{font-size:11px;padding:2px 7px;border-radius:100px;margin-top:4px;display:inline-block}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem;margin-bottom:1rem}
+.soil-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.soil-lbl{font-size:12px;color:var(--color-text-secondary);width:80px;flex-shrink:0}
+.soil-bar{flex:1;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.soil-fill{height:100%;border-radius:3px}
+.soil-v{font-size:12px;font-weight:500;color:var(--color-text-primary);width:38px;text-align:right}
+.tbl{width:100%;font-size:13px;border-collapse:collapse;table-layout:fixed}
+.tbl th{text-align:left;padding:7px 8px;color:var(--color-text-secondary);font-weight:500;border-bottom:0.5px solid var(--color-border-tertiary);font-size:11px;text-transform:uppercase;letter-spacing:0.4px}
+.tbl td{padding:9px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--color-background-secondary)}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px}
+.dot-g{background:#639922}.dot-a{background:#BA7517}.dot-t{background:#1D9E75}.dot-r{background:#E24B4A}
+.alert-it{display:flex;align-items:flex-start;gap:8px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.alert-it:last-child{border-bottom:none}
+.adot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.at{font-size:13px;color:var(--color-text-primary);line-height:1.5}
+.atime{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+.wgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.wit{text-align:center;padding:10px 6px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)}
+.wic{font-size:20px;margin-bottom:3px}
+.wday{font-size:11px;color:var(--color-text-secondary);font-weight:500}
+.wtemp{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.wcond{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+.rec-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg{margin-bottom:0}
+.btn-rec{grid-column:1/-1;padding:10px;background:#3B6D11;color:#fff;border:none;border-radius:var(--border-radius-md);font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:4px}
+.btn-rec:hover{background:#27500A}
+.res-banner{display:none;background:#EAF3DE;border:0.5px solid #C0DD97;border-radius:var(--border-radius-lg);padding:1.25rem;margin-top:.9rem}
+.res-crop{font-family:'DM Serif Display',serif;font-size:26px;color:#27500A}
+.res-sub{font-size:13px;color:#3B6D11;margin-top:3px}
+.chip{font-size:12px;padding:3px 10px;border-radius:100px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.prof-card{display:flex;align-items:flex-start;gap:1.25rem;padding:1.25rem;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:1rem}
+.pav{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500;flex-shrink:0}
+.pname{font-family:'DM Serif Display',serif;font-size:19px;color:var(--color-text-primary)}
+.prole{font-size:13px;color:var(--color-text-secondary);margin-top:2px}
+.ptags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.ptag{font-size:12px;padding:3px 10px;border-radius:100px;background:#EAF3DE;color:#27500A}
+.hist-it{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.hist-it:last-child{border-bottom:none}
+.hico{width:30px;height:30px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;font-size:15px}
+.hn{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.hd{font-size:11px;color:var(--color-text-secondary)}
+.hc{font-size:12px;font-weight:500}
+</style>
+
+<!-- LANDING: SELECT FARMER -->
+<div id="landing">
+  <div class="land-inner">
+    <div class="land-header">
+      <div class="land-logo">🌾</div>
+      <div class="land-title">AgriSense</div>
+      <div class="land-sub">Smart Crop Intelligence — Select your farmer profile to continue</div>
+    </div>
+    <div class="farmer-grid" id="farmer-grid"></div>
+    <div class="land-divider">or sign in with credentials</div>
+    <button class="btn-manual" onclick="showManualLogin()">Sign in manually →</button>
+  </div>
+</div>
+
+<!-- LOGIN FORM -->
+<div id="login-overlay" class="hidden">
+  <div class="login-box">
+    <div class="login-avatar-wrap">
+      <div class="login-av" id="lav" style="background:#EAF3DE;color:#27500A">RK</div>
+      <div class="login-name" id="lname">Rajesh Kumar</div>
+      <div class="login-role" id="lrole">Farmer · Thanjavur, TN</div>
+    </div>
+    <div style="margin-bottom:.9rem">
+      <label class="form-lbl">Email</label>
+      <input id="l-email" class="form-inp" type="email" placeholder="your@email.com" />
+    </div>
+    <div>
+      <label class="form-lbl">Password</label>
+      <input id="l-pass" class="form-inp" type="password" placeholder="••••••••" />
+    </div>
+    <div class="err-msg" id="l-err">Incorrect email or password.</div>
+    <button class="btn-sign" onclick="doLogin()">Sign in</button>
+    <div class="hint-box" id="l-hint"></div>
+    <button class="back-btn" onclick="showLanding()">← Back to farmer selection</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+  <div class="topbar">
+    <div class="tb-left">
+      <span style="font-size:20px">🌾</span>
+      <span class="tb-brand">AgriSense</span>
+      <span class="tb-badge" id="tb-season" style="background:#EAF3DE;color:#27500A"></span>
+      <div class="nav-row" style="margin-left:10px">
+        <button class="nav-btn act" onclick="switchTab('overview',this)">Overview</button>
+        <button class="nav-btn" onclick="switchTab('recommend',this)">Recommend</button>
+        <button class="nav-btn" onclick="switchTab('fields',this)">Fields</button>
+        <button class="nav-btn" onclick="switchTab('profile',this)">Profile</button>
+      </div>
+    </div>
+    <div class="tb-right">
+      <div class="user-chip">
+        <div class="u-av" id="dash-av"></div>
+        <span id="dash-uname"></span>
+      </div>
+      <button class="btn-out" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+  <div class="main">
+    <!-- OVERVIEW -->
+    <div class="pv act" id="tab-overview">
+      <div class="pg-title">Farm overview</div>
+      <div class="pg-sub" id="ov-sub"></div>
+      <div class="mgrid" id="ov-metrics"></div>
+      <div class="two">
+        <div class="mcard">
+          <div class="ct">Soil nutrients</div>
+          <div id="soil-bars"></div>
+        </div>
+        <div class="mcard">
+          <div class="ct">4-day forecast</div>
+          <div class="wgrid" id="weather-grid"></div>
+        </div>
+      </div>
+      <div class="two">
+        <div class="mcard">
+          <div class="ct">Top crop matches</div>
+          <table class="tbl">
+            <thead><tr><th>Crop</th><th>Season</th><th>Confidence</th><th>Fit</th></tr></thead>
+            <tbody id="crop-tbl"></tbody>
+          </table>
+        </div>
+        <div class="mcard">
+          <div class="ct">Recent alerts</div>
+          <div id="alerts-list"></div>
+        </div>
+      </div>
+    </div>
+    <!-- RECOMMEND -->
+    <div class="pv" id="tab-recommend">
+      <div class="pg-title">Crop recommendation engine</div>
+      <div class="pg-sub">Enter soil & climate parameters to get AI-powered suggestions</div>
+      <div class="mcard">
+        <div class="ct">Field parameters</div>
+        <div class="rec-form">
+          <div class="fg"><label class="form-lbl">Nitrogen (N) kg/ha</label><input id="rn" class="form-inp" type="number" /></div>
+          <div class="fg"><label class="form-lbl">Phosphorus (P) kg/ha</label><input id="rp" class="form-inp" type="number" /></div>
+          <div class="fg"><label class="form-lbl">Potassium (K) kg/ha</label><input id="rk" class="form-inp" type="number" /></div>
+          <div class="fg"><label class="form-lbl">Temperature (°C)</label><input id="rtemp" class="form-inp" type="number" /></div>
+          <div class="fg"><label class="form-lbl">Humidity (%)</label><input id="rhum" class="form-inp" type="number" /></div>
+          <div class="fg"><label class="form-lbl">pH level</label><input id="rph" class="form-inp" type="number" step="0.1" /></div>
+          <div class="fg"><label class="form-lbl">Rainfall (mm)</label><input id="rrain" class="form-inp" type="number" /></div>
+          <div class="fg"><label class="form-lbl">Soil type</label><select id="rsoil" class="form-inp"><option>Alluvial</option><option>Clay loam</option><option>Sandy loam</option><option>Black cotton</option><option>Red laterite</option></select></div>
+          <button class="btn-rec" onclick="runRec()">Get crop recommendation →</button>
+        </div>
+        <div class="res-banner" id="res-banner">
+          <div style="font-size:11px;color:#3B6D11;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px">Best match</div>
+          <div class="res-crop" id="res-crop"></div>
+          <div class="res-sub" id="res-sub"></div>
+          <div class="chips" id="res-chips"></div>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="ct">All suitable crops</div>
+        <table class="tbl"><thead><tr><th>Crop</th><th>Confidence</th><th>Season</th><th>Water</th><th>Yield</th></tr></thead><tbody id="rec-tbody"><tr><td colspan="5" style="color:var(--color-text-secondary);text-align:center;padding:1.5rem 0">Enter parameters above</td></tr></tbody></table>
+      </div>
+    </div>
+    <!-- FIELDS -->
+    <div class="pv" id="tab-fields">
+      <div class="pg-title">Field management</div>
+      <div class="pg-sub" id="fields-sub"></div>
+      <div class="two">
+        <div class="mcard">
+          <div class="ct">Field plots</div>
+          <table class="tbl">
+            <thead><tr><th>Field</th><th>Crop</th><th>Area</th><th>Stage</th></tr></thead>
+            <tbody id="fields-tbl"></tbody>
+          </table>
+        </div>
+        <div class="mcard">
+          <div class="ct">Soil health by field</div>
+          <div id="field-soil"></div>
+        </div>
+      </div>
+    </div>
+    <!-- PROFILE -->
+    <div class="pv" id="tab-profile">
+      <div class="pg-title">Farmer profile</div>
+      <div class="pg-sub">Account information and crop history</div>
+      <div class="prof-card" id="prof-card"></div>
+      <div class="two">
+        <div class="mcard">
+          <div class="ct">Recommendation history</div>
+          <div id="hist-list"></div>
+        </div>
+        <div class="mcard">
+          <div class="ct">Account settings</div>
+          <div style="margin-bottom:.8rem"><label class="form-lbl">Full name</label><input class="form-inp" type="text" id="set-name" /></div>
+          <div style="margin-bottom:.8rem"><label class="form-lbl">Email</label><input class="form-inp" type="email" id="set-email" /></div>
+          <div style="margin-bottom:.8rem"><label class="form-lbl">Location</label><input class="form-inp" type="text" id="set-loc" /></div>
+          <div style="margin-bottom:.8rem"><label class="form-lbl">Language</label><select class="form-inp" id="set-lang"><option>English</option><option>Tamil</option><option>Telugu</option><option>Hindi</option><option>Kannada</option><option>Marathi</option></select></div>
+          <button class="btn-sign" style="margin-top:4px">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FARMERS = [
+  {
+    id:"rk", initials:"RK", name:"Rajesh Kumar", village:"Thanjavur, Tamil Nadu",
+    email:"rajesh@agrisense.io", pass:"rajesh123",
+    avatar:{bg:"#EAF3DE",color:"#27500A"},
+    tags:["🌾 Rice farmer","12.4 acres","Kharif 2024"],
+    season:"Kharif 2024", location:"Thanjavur, TN",
+    metrics:[
+      {lbl:"Total area",val:"12.4 ac",tag:"4 active fields",tb:"#EAF3DE",tc:"#27500A"},
+      {lbl:"Avg soil pH",val:"6.8",tag:"Optimal",tb:"#E1F5EE",tc:"#085041"},
+      {lbl:"Rainfall mm",val:"142",tag:"This month",tb:"#E6F1FB",tc:"#0C447C"},
+      {lbl:"Top crop",val:"Rice",tag:"94% match",tb:"#EAF3DE",tc:"#27500A"},
+    ],
+    soil:{N:72,P:45,K:88,moisture:68,pH:6.8},
+    weather:[{icon:"⛅",day:"Today",temp:"31°C",cond:"Partly cloudy"},{icon:"🌧️",day:"Tue",temp:"28°C",cond:"Light rain"},{icon:"🌦️",day:"Wed",temp:"27°C",cond:"Showers"},{icon:"☀️",day:"Thu",temp:"33°C",cond:"Sunny"}],
+    crops:[{n:"🌾 Rice",s:"Kharif",c:94,fit:"Best fit",dc:"dot-g"},{n:"🌽 Maize",s:"Kharif",c:81,fit:"Good",dc:"dot-g"},{n:"🫘 Groundnut",s:"Kharif",c:74,fit:"Moderate",dc:"dot-a"},{n:"🌿 Green gram",s:"Rabi",c:68,fit:"Next season",dc:"dot-t"}],
+    alerts:[{msg:"Low phosphorus in Field B — add DAP fertilizer",time:"2 hrs ago",col:"#BA7517"},{msg:"18mm rain tomorrow — delay irrigation",time:"6 hrs ago",col:"#378ADD"},{msg:"Soil moisture in Field A optimal for transplanting",time:"Yesterday",col:"#639922"},{msg:"Pest risk (stem borer) — inspect Field C",time:"2 days ago",col:"#E24B4A"}],
+    fields:[{f:"Field A",crop:"🌾 Rice",area:"3.2 ac",stage:"Tillering",dc:"dot-g"},{f:"Field B",crop:"🌽 Maize",area:"2.8 ac",stage:"Germination",dc:"dot-a"},{f:"Field C",crop:"🌿 Cotton",area:"4.1 ac",stage:"Flowering",dc:"dot-g"},{f:"Field D",crop:"— Fallow",area:"2.3 ac",stage:"Resting",dc:"dot-t"}],
+    fieldSoil:[{f:"Field A",N:80,P:55,K:90},{f:"Field B",N:50,P:30,K:75},{f:"Field C",N:70,P:60,K:85}],
+    history:[{crop:"🌾 Rice",label:"Rice — Kharif 2024",date:"12 Jun 2024",conf:94,hbg:"#EAF3DE",hco:"#27500A"},{crop:"🌾",label:"Wheat — Rabi 2023",date:"4 Nov 2023",conf:82,hbg:"#FAEEDA",hco:"#633806"},{crop:"🌽",label:"Maize — Kharif 2023",date:"8 Jun 2023",conf:79,hbg:"#E1F5EE",hco:"#085041"}],
+    recDefaults:{N:72,P:45,K:88,temp:31,hum:68,pH:6.8,rain:142,soil:"Clay loam"},
+    profileExtra:{role:"Progressive farmer · Member since 2022",extra:["📍 Thanjavur, TN","🌾 12.4 acres","📱 +91 98765 43210"]}
+  },
+  {
+    id:"pm", initials:"PM", name:"Priya Murugan", village:"Coimbatore, Tamil Nadu",
+    email:"priya@agrisense.io", pass:"priya123",
+    avatar:{bg:"#EEEDFE",color:"#3C3489"},
+    tags:["🌿 Cotton farmer","8.2 acres","Kharif 2024"],
+    season:"Kharif 2024", location:"Coimbatore, TN",
+    metrics:[
+      {lbl:"Total area",val:"8.2 ac",tag:"3 active fields",tb:"#EEEDFE",tc:"#3C3489"},
+      {lbl:"Avg soil pH",val:"7.2",tag:"Slightly alkaline",tb:"#FAEEDA",tc:"#633806"},
+      {lbl:"Rainfall mm",val:"98",tag:"This month",tb:"#E6F1FB",tc:"#0C447C"},
+      {lbl:"Top crop",val:"Cotton",tag:"88% match",tb:"#EEEDFE",tc:"#3C3489"},
+    ],
+    soil:{N:55,P:65,K:78,moisture:52,pH:7.2},
+    weather:[{icon:"☀️",day:"Today",temp:"34°C",cond:"Sunny"},{icon:"⛅",day:"Tue",temp:"33°C",cond:"Partly cloudy"},{icon:"☀️",day:"Wed",temp:"36°C",cond:"Hot & sunny"},{icon:"🌤️",day:"Thu",temp:"32°C",cond:"Fair"}],
+    crops:[{n:"🌿 Cotton",s:"Kharif",c:88,fit:"Best fit",dc:"dot-g"},{n:"🌾 Sorghum",s:"Kharif",c:76,fit:"Good",dc:"dot-g"},{n:"🫘 Groundnut",s:"Kharif",c:70,fit:"Moderate",dc:"dot-a"},{n:"🌽 Maize",s:"Kharif",c:64,fit:"Moderate",dc:"dot-a"}],
+    alerts:[{msg:"Irrigation schedule: Field A needs water in 2 days",time:"1 hr ago",col:"#378ADD"},{msg:"High temperature forecast — mulch Field B",time:"4 hrs ago",col:"#BA7517"},{msg:"Cotton boll stage — increase K fertilizer",time:"Yesterday",col:"#639922"},{msg:"Weeding due in Field C this week",time:"3 days ago",col:"#7F77DD"}],
+    fields:[{f:"Field A",crop:"🌿 Cotton",area:"3.5 ac",stage:"Boll formation",dc:"dot-g"},{f:"Field B",crop:"🌾 Sorghum",area:"2.8 ac",stage:"Heading",dc:"dot-a"},{f:"Field C",crop:"🫘 Groundnut",area:"1.9 ac",stage:"Pegging",dc:"dot-g"}],
+    fieldSoil:[{f:"Field A",N:60,P:70,K:80},{f:"Field B",N:45,P:55,K:70},{f:"Field C",N:55,P:60,K:75}],
+    history:[{crop:"🌿",label:"Cotton — Kharif 2024",date:"10 Jun 2024",conf:88,hbg:"#EEEDFE",hco:"#3C3489"},{crop:"🌾",label:"Sorghum — Kharif 2023",date:"5 Jun 2023",conf:81,hbg:"#FAEEDA",hco:"#633806"},{crop:"🫘",label:"Groundnut — Rabi 2023",date:"2 Nov 2023",conf:75,hbg:"#EAF3DE",hco:"#27500A"}],
+    recDefaults:{N:55,P:65,K:78,temp:34,hum:52,pH:7.2,rain:98,soil:"Black cotton"},
+    profileExtra:{role:"Certified organic farmer · Member since 2021",extra:["📍 Coimbatore, TN","🌿 8.2 acres","📱 +91 87654 32109"]}
+  },
+  {
+    id:"sv", initials:"SV", name:"Suresh Verma", village:"Nashik, Maharashtra",
+    email:"suresh@agrisense.io", pass:"suresh123",
+    avatar:{bg:"#FAEEDA",color:"#633806"},
+    tags:["🍇 Grape grower","15.6 acres","Annual"],
+    season:"Annual 2024", location:"Nashik, MH",
+    metrics:[
+      {lbl:"Total area",val:"15.6 ac",tag:"5 active fields",tb:"#FAEEDA",tc:"#633806"},
+      {lbl:"Avg soil pH",val:"6.4",tag:"Slightly acidic",tb:"#EAF3DE",tc:"#27500A"},
+      {lbl:"Rainfall mm",val:"62",tag:"This month",tb:"#E6F1FB",tc:"#0C447C"},
+      {lbl:"Top crop",val:"Grapes",tag:"91% match",tb:"#FAEEDA",tc:"#633806"},
+    ],
+    soil:{N:42,P:80,K:95,moisture:45,pH:6.4},
+    weather:[{icon:"☀️",day:"Today",temp:"29°C",cond:"Sunny"},{icon:"☀️",day:"Tue",temp:"30°C",cond:"Sunny"},{icon:"⛅",day:"Wed",temp:"27°C",cond:"Partly cloudy"},{icon:"🌦️",day:"Thu",temp:"24°C",cond:"Light shower"}],
+    crops:[{n:"🍇 Grapes",s:"Annual",c:91,fit:"Best fit",dc:"dot-g"},{n:"🍅 Tomato",s:"Rabi",c:83,fit:"Good",dc:"dot-g"},{n:"🧅 Onion",s:"Rabi",c:78,fit:"Good",dc:"dot-g"},{n:"🌹 Pomegranate",s:"Annual",c:70,fit:"Moderate",dc:"dot-a"}],
+    alerts:[{msg:"Pruning season begins next week — prepare tools",time:"3 hrs ago",col:"#639922"},{msg:"Drip irrigation efficiency dropped — check emitters",time:"8 hrs ago",col:"#BA7517"},{msg:"Downy mildew risk — apply fungicide to Field 2",time:"Yesterday",col:"#E24B4A"},{msg:"Soil potassium excellent across all fields",time:"4 days ago",col:"#639922"}],
+    fields:[{f:"Plot 1",crop:"🍇 Grapes",area:"4.2 ac",stage:"Veraison",dc:"dot-g"},{f:"Plot 2",crop:"🍇 Grapes",area:"3.8 ac",stage:"Berry growth",dc:"dot-g"},{f:"Plot 3",crop:"🍅 Tomato",area:"3.1 ac",stage:"Fruiting",dc:"dot-a"},{f:"Plot 4",crop:"🧅 Onion",area:"2.5 ac",stage:"Bulbing",dc:"dot-t"},{f:"Plot 5",crop:"— Fallow",area:"2.0 ac",stage:"Resting",dc:"dot-t"}],
+    fieldSoil:[{f:"Plot 1",N:40,P:85,K:100},{f:"Plot 2",N:45,P:80,K:95},{f:"Plot 3",N:55,P:70,K:80}],
+    history:[{crop:"🍇",label:"Grapes — Annual 2024",date:"Jan 2024",conf:91,hbg:"#FAEEDA",hco:"#633806"},{crop:"🍅",label:"Tomato — Rabi 2023",date:"Oct 2023",conf:83,hbg:"#FCEBEB",hco:"#A32D2D"},{crop:"🧅",label:"Onion — Rabi 2022",date:"Oct 2022",conf:77,hbg:"#FAEEDA",hco:"#633806"}],
+    recDefaults:{N:42,P:80,K:95,temp:29,hum:45,pH:6.4,rain:62,soil:"Red laterite"},
+    profileExtra:{role:"Export-grade grape farmer · Member since 2020",extra:["📍 Nashik, MH","🍇 15.6 acres","📱 +91 76543 21098"]}
+  },
+  {
+    id:"ad", initials:"AD", name:"Anita Devi", village:"Ludhiana, Punjab",
+    email:"anita@agrisense.io", pass:"anita123",
+    avatar:{bg:"#E1F5EE",color:"#085041"},
+    tags:["🌾 Wheat farmer","20.0 acres","Rabi 2024"],
+    season:"Rabi 2024", location:"Ludhiana, PB",
+    metrics:[
+      {lbl:"Total area",val:"20.0 ac",tag:"6 active fields",tb:"#E1F5EE",tc:"#085041"},
+      {lbl:"Avg soil pH",val:"7.8",tag:"Alkaline",tb:"#FAEEDA",tc:"#633806"},
+      {lbl:"Rainfall mm",val:"28",tag:"This month",tb:"#E6F1FB",tc:"#0C447C"},
+      {lbl:"Top crop",val:"Wheat",tag:"96% match",tb:"#E1F5EE",tc:"#085041"},
+    ],
+    soil:{N:90,P:50,K:110,moisture:40,pH:7.8},
+    weather:[{icon:"🌥️",day:"Today",temp:"18°C",cond:"Overcast"},{icon:"🌧️",day:"Tue",temp:"15°C",cond:"Rain"},{icon:"❄️",day:"Wed",temp:"10°C",cond:"Cold"},{icon:"⛅",day:"Thu",temp:"16°C",cond:"Partly cloudy"}],
+    crops:[{n:"🌾 Wheat",s:"Rabi",c:96,fit:"Best fit",dc:"dot-g"},{n:"🌱 Mustard",s:"Rabi",c:84,fit:"Good",dc:"dot-g"},{n:"🫛 Chickpea",s:"Rabi",c:78,fit:"Good",dc:"dot-g"},{n:"🧄 Garlic",s:"Rabi",c:68,fit:"Moderate",dc:"dot-a"}],
+    alerts:[{msg:"Irrigation schedule: wheat at tillering stage needs water",time:"1 hr ago",col:"#378ADD"},{msg:"Yellow rust disease alert — monitor Field 3",time:"5 hrs ago",col:"#E24B4A"},{msg:"High nitrogen levels — reduce urea in Field 5",time:"Yesterday",col:"#BA7517"},{msg:"Harvest forecast: April 2nd week — arrange labor",time:"2 days ago",col:"#639922"}],
+    fields:[{f:"Field 1",crop:"🌾 Wheat",area:"4.5 ac",stage:"Tillering",dc:"dot-g"},{f:"Field 2",crop:"🌾 Wheat",area:"4.0 ac",stage:"Jointing",dc:"dot-g"},{f:"Field 3",crop:"🌱 Mustard",area:"3.5 ac",stage:"Flowering",dc:"dot-a"},{f:"Field 4",crop:"🫛 Chickpea",area:"3.0 ac",stage:"Pod filling",dc:"dot-t"},{f:"Field 5",crop:"🌾 Wheat",area:"3.0 ac",stage:"Tillering",dc:"dot-g"},{f:"Field 6",crop:"— Fallow",area:"2.0 ac",stage:"Resting",dc:"dot-t"}],
+    fieldSoil:[{f:"Field 1",N:95,P:55,K:115},{f:"Field 2",N:85,P:50,K:105},{f:"Field 3",N:80,P:45,K:100}],
+    history:[{crop:"🌾",label:"Wheat — Rabi 2024",date:"Nov 2023",conf:96,hbg:"#E1F5EE",hco:"#085041"},{crop:"🌾",label:"Paddy — Kharif 2023",date:"Jun 2023",conf:88,hbg:"#EAF3DE",hco:"#27500A"},{crop:"🌱",label:"Mustard — Rabi 2022",date:"Nov 2022",conf:82,hbg:"#FAEEDA",hco:"#633806"}],
+    recDefaults:{N:90,P:50,K:110,temp:18,hum:40,pH:7.8,rain:28,soil:"Alluvial"},
+    profileExtra:{role:"Large-scale wheat grower · Member since 2019",extra:["📍 Ludhiana, PB","🌾 20.0 acres","📱 +91 65432 10987"]}
+  }
+];
+
+const CROPS_DB = [
+  {name:"Rice 🌾",conf:94,season:"Kharif",water:"High",yield:"5–7 t/ha",n:[60,100],p:[30,60],ph:[5.5,7.0],temp:[22,35],rain:[100,200]},
+  {name:"Wheat 🌾",conf:82,season:"Rabi",water:"Medium",yield:"3–5 t/ha",n:[60,120],p:[40,80],ph:[6.0,7.5],temp:[10,25],rain:[30,100]},
+  {name:"Maize 🌽",conf:81,season:"Kharif",water:"Medium",yield:"4–6 t/ha",n:[50,100],p:[30,60],ph:[5.5,7.0],temp:[18,35],rain:[50,100]},
+  {name:"Cotton 🌿",conf:74,season:"Kharif",water:"Medium",yield:"2–3 t/ha",n:[60,120],p:[40,80],ph:[5.5,7.5],temp:[25,40],rain:[50,100]},
+  {name:"Groundnut 🫘",conf:73,season:"Kharif",water:"Low",yield:"2–4 t/ha",n:[20,50],p:[30,60],ph:[6.0,7.5],temp:[25,35],rain:[50,150]},
+  {name:"Sugarcane 🎋",conf:68,season:"Annual",water:"Very high",yield:"60–80 t/ha",n:[80,150],p:[40,80],ph:[6.0,7.5],temp:[20,40],rain:[100,200]},
+  {name:"Chickpea 🫛",conf:65,season:"Rabi",water:"Low",yield:"1–2 t/ha",n:[20,40],p:[30,60],ph:[6.0,8.0],temp:[10,30],rain:[20,80]},
+  {name:"Grapes 🍇",conf:80,season:"Annual",water:"Low–Med",yield:"10–20 t/ha",n:[30,60],p:[60,90],ph:[6.0,7.0],temp:[20,35],rain:[40,100]},
+];
+
+let currentFarmer = null;
+
+function buildLanding() {
+  const grid = document.getElementById('farmer-grid');
+  grid.innerHTML = FARMERS.map(f => `
+    <div class="farmer-card" onclick="selectFarmer('${f.id}')">
+      <div class="fc-avatar" style="background:${f.avatar.bg};color:${f.avatar.color}">${f.initials}</div>
+      <div class="fc-name">${f.name}</div>
+      <div class="fc-village">${f.village}</div>
+      <div class="fc-meta">${f.tags.map(t=>`<span class="fc-tag" style="background:${f.avatar.bg};color:${f.avatar.color}">${t}</span>`).join('')}</div>
+      <button class="fc-btn">Sign in as ${f.name.split(' ')[0]} →</button>
+    </div>
+  `).join('');
+}
+
+function selectFarmer(id) {
+  const f = FARMERS.find(x=>x.id===id);
+  currentFarmer = f;
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('login-overlay').classList.remove('hidden');
+  document.getElementById('lav').textContent = f.initials;
+  document.getElementById('lav').style.background = f.avatar.bg;
+  document.getElementById('lav').style.color = f.avatar.color;
+  document.getElementById('lname').textContent = f.name;
+  document.getElementById('lrole').textContent = f.village;
+  document.getElementById('l-email').value = f.email;
+  document.getElementById('l-pass').value = '';
+  document.getElementById('l-err').style.display='none';
+  document.getElementById('l-hint').innerHTML = `<strong>Demo:</strong> ${f.email} / ${f.pass}`;
+}
+
+function showManualLogin() {
+  currentFarmer = null;
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('login-overlay').classList.remove('hidden');
+  document.getElementById('lav').textContent = '?';
+  document.getElementById('lav').style.background = '#F1EFE8';
+  document.getElementById('lav').style.color = '#5F5E5A';
+  document.getElementById('lname').textContent = 'Sign in';
+  document.getElementById('lrole').textContent = 'Enter your farmer credentials';
+  document.getElementById('l-email').value = '';
+  document.getElementById('l-pass').value = '';
+  document.getElementById('l-err').style.display='none';
+  document.getElementById('l-hint').innerHTML = FARMERS.map(f=>`<strong>${f.name}:</strong> ${f.email} / ${f.pass}`).join('<br>');
+}
+
+function showLanding() {
+  document.getElementById('login-overlay').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('landing').classList.remove('hidden');
+}
+
+function doLogin() {
+  const email = document.getElementById('l-email').value.trim();
+  const pass = document.getElementById('l-pass').value.trim();
+  const farmer = FARMERS.find(f => f.email===email && f.pass===pass);
+  if (!farmer) { document.getElementById('l-err').style.display='block'; return; }
+  currentFarmer = farmer;
+  document.getElementById('l-err').style.display='none';
+  document.getElementById('login-overlay').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  loadDashboard(farmer);
+}
+
+function doLogout() {
+  document.getElementById('dashboard').classList.add('hidden');
+  showLanding();
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.pv').forEach(v=>v.classList.remove('act'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('act'));
+  document.getElementById('tab-'+name).classList.add('act');
+  btn.classList.add('act');
+}
+
+function loadDashboard(f) {
+  document.getElementById('tb-season').textContent = f.season;
+  document.getElementById('dash-uname').textContent = f.name;
+  const dav = document.getElementById('dash-av');
+  dav.textContent = f.initials; dav.style.background = f.avatar.bg; dav.style.color = f.avatar.color;
+  document.getElementById('ov-sub').textContent = `Season: ${f.season}  ·  Location: ${f.location}`;
+  document.getElementById('ov-metrics').innerHTML = f.metrics.map(m=>`
+    <div class="mmet">
+      <div class="mmet-lbl">${m.lbl}</div>
+      <div class="mmet-val">${m.val}</div>
+      <span class="mmet-tag" style="background:${m.tb};color:${m.tc}">${m.tag}</span>
+    </div>`).join('');
+  document.getElementById('soil-bars').innerHTML = [
+    {lbl:'Nitrogen (N)',val:f.soil.N,max:150,col:'#639922'},
+    {lbl:'Phosphorus (P)',val:f.soil.P,max:150,col:'#BA7517'},
+    {lbl:'Potassium (K)',val:f.soil.K,max:200,col:'#1D9E75'},
+    {lbl:'Moisture',val:f.soil.moisture,max:100,col:'#378ADD'},
+    {lbl:'pH',val:Math.round(f.soil.pH*10),max:100,col:'#7F77DD'},
+  ].map(s=>`<div class="soil-row"><span class="soil-lbl">${s.lbl}</span><div class="soil-bar"><div class="soil-fill" style="width:${Math.round(s.val/s.max*100)}%;background:${s.col}"></div></div><span class="soil-v">${s.lbl==='pH'?f.soil.pH:s.val}</span></div>`).join('');
+  document.getElementById('weather-grid').innerHTML = f.weather.map(w=>`<div class="wit"><div class="wic">${w.icon}</div><div class="wday">${w.day}</div><div class="wtemp">${w.temp}</div><div class="wcond">${w.cond}</div></div>`).join('');
+  document.getElementById('crop-tbl').innerHTML = f.crops.map(c=>`<tr><td>${c.n}</td><td>${c.s}</td><td>${c.c}%</td><td><span class="dot ${c.dc}"></span>${c.fit}</td></tr>`).join('');
+  document.getElementById('alerts-list').innerHTML = f.alerts.map(a=>`<div class="alert-it"><div class="adot" style="background:${a.col}"></div><div><div class="at">${a.msg}</div><div class="atime">${a.time}</div></div></div>`).join('');
+  document.getElementById('fields-sub').textContent = `Farm plots for ${f.name} · ${f.location}`;
+  document.getElementById('fields-tbl').innerHTML = f.fields.map(fd=>`<tr><td>${fd.f}</td><td>${fd.crop}</td><td>${fd.area}</td><td><span class="dot ${fd.dc}"></span>${fd.stage}</td></tr>`).join('');
+  document.getElementById('field-soil').innerHTML = f.fieldSoil.map(fs=>`
+    <div style="margin-bottom:12px">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px">${fs.f}</div>
+      <div class="soil-row"><span class="soil-lbl">N</span><div class="soil-bar"><div class="soil-fill" style="width:${Math.round(fs.N/150*100)}%;background:#639922"></div></div><span class="soil-v">${fs.N}</span></div>
+      <div class="soil-row"><span class="soil-lbl">P</span><div class="soil-bar"><div class="soil-fill" style="width:${Math.round(fs.P/150*100)}%;background:#BA7517"></div></div><span class="soil-v">${fs.P}</span></div>
+      <div class="soil-row"><span class="soil-lbl">K</span><div class="soil-bar"><div class="soil-fill" style="width:${Math.round(fs.K/200*100)}%;background:#1D9E75"></div></div><span class="soil-v">${fs.K}</span></div>
+    </div>`).join('');
+  const d = f.recDefaults;
+  document.getElementById('rn').value=d.N; document.getElementById('rp').value=d.P; document.getElementById('rk').value=d.K;
+  document.getElementById('rtemp').value=d.temp; document.getElementById('rhum').value=d.hum; document.getElementById('rph').value=d.pH;
+  document.getElementById('rrain').value=d.rain;
+  const sel=document.getElementById('rsoil'); for(let i=0;i<sel.options.length;i++){if(sel.options[i].text===d.soil){sel.selectedIndex=i;break;}}
+  document.getElementById('res-banner').style.display='none';
+  document.getElementById('rec-tbody').innerHTML='<tr><td colspan="5" style="color:var(--color-text-secondary);text-align:center;padding:1.5rem 0">Enter parameters above</td></tr>';
+  const pe = f.profileExtra;
+  document.getElementById('prof-card').innerHTML = `
+    <div class="pav" style="background:${f.avatar.bg};color:${f.avatar.color}">${f.initials}</div>
+    <div>
+      <div class="pname">${f.name}</div>
+      <div class="prole">${pe.role}</div>
+      <div class="ptags">${pe.extra.map(e=>`<span class="ptag">${e}</span>`).join('')}</div>
+    </div>`;
+  document.getElementById('hist-list').innerHTML = f.history.map(h=>`
+    <div class="hist-it">
+      <div class="hico" style="background:${h.hbg};color:${h.hco}">${h.crop}</div>
+      <div style="flex:1"><div class="hn">${h.label}</div><div class="hd">${h.date}</div></div>
+      <div class="hc" style="color:${h.hco}">${h.conf}%</div>
+    </div>`).join('');
+  document.getElementById('set-name').value=f.name;
+  document.getElementById('set-email').value=f.email;
+  document.getElementById('set-loc').value=f.village;
+  document.querySelectorAll('.pv').forEach(v=>v.classList.remove('act'));
+  document.querySelector('.nav-btn').classList.remove('act');
+  document.getElementById('tab-overview').classList.add('act');
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>{if(i===0)b.classList.add('act');});
+}
+
+function runRec() {
+  const n=+document.getElementById('rn').value, p=+document.getElementById('rp').value;
+  const k=+document.getElementById('rk').value, temp=+document.getElementById('rtemp').value;
+  const hum=+document.getElementById('rhum').value, ph=+document.getElementById('rph').value;
+  const rain=+document.getElementById('rrain').value, soil=document.getElementById('rsoil').value;
+  const scored = CROPS_DB.map(c=>{
+    let s=c.conf;
+    if(n>=c.n[0]&&n<=c.n[1])s+=5; if(p>=c.p[0]&&p<=c.p[1])s+=5;
+    if(ph>=c.ph[0]&&ph<=c.ph[1])s+=5; if(temp>=c.temp[0]&&temp<=c.temp[1])s+=5;
+    if(rain>=c.rain[0]&&rain<=c.rain[1])s+=5;
+    return {...c,score:Math.min(s,99)};
+  }).sort((a,b)=>b.score-a.score);
+  const best=scored[0];
+  document.getElementById('res-banner').style.display='block';
+  document.getElementById('res-crop').textContent=best.name;
+  document.getElementById('res-sub').textContent=best.score+'% confidence · '+best.season+' season · '+soil+' soil';
+  document.getElementById('res-chips').innerHTML=[`Water: ${best.water}`,`Yield: ${best.yield}`,`pH: ${ph}`,`Humidity: ${hum}%`].map(t=>`<span class="chip">${t}</span>`).join('');
+  document.getElementById('rec-tbody').innerHTML=scored.map((c,i)=>{
+    const col=i===0?'#3B6D11':i<3?'#0F6E56':'var(--color-text-secondary)';
+    return `<tr><td style="font-weight:${i===0?500:400}">${c.name}</td><td style="color:${col};font-weight:500">${c.score}%</td><td>${c.season}</td><td>${c.water}</td><td>${c.yield}</td></tr>`;
+  }).join('');
+}
+
+buildLanding();
+</script>
